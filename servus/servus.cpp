@@ -181,6 +181,8 @@ protected:
 #include "dnssd/servus.h"
 #elif defined(SERVUS_USE_AVAHI_CLIENT)
 #include "avahi/servus.h"
+#elif defined(SERVUS_USE_WINDNS)
+#include "windns/servus.h"
 #endif
 #include "none/servus.h"
 #include "test/servus.h"
@@ -199,8 +201,11 @@ std::unique_ptr<Servus::Impl> _chooseImplementation(const std::string& name)
         return std::unique_ptr<Servus::Impl>(new dnssd::Servus(name));
 #elif defined(SERVUS_USE_AVAHI_CLIENT)
         return std::unique_ptr<Servus::Impl>(new avahi::Servus(name));
-#endif
+#elif defined(SERVUS_USE_WINDNS)
+        return std::unique_ptr<Servus::Impl>(new windns::Servus(name));
+#else
         return std::unique_ptr<Servus::Impl>(new none::Servus(name));
+#endif
     }
     catch (const std::runtime_error& error)
     {
